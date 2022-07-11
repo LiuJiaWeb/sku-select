@@ -1,5 +1,5 @@
 ### 规格选择DEMO
-# 技术栈
+### 技术栈
 Vue 3 + Vite
 ### 安装
 yarn install
