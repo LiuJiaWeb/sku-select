@@ -143,14 +143,13 @@ const calc = () => {
   //存在已被选择的项
   properties.forEach(it => {
     it.values.forEach(item => {
-      const checkArr = combineArr(item.com_id, hasSelectedArr)
-      const isEffect = isEffectSku(checkArr)
+      const checkArr = combineArr(item.com_id, hasSelectedArr)  //去除相同项，去重
+      const isEffect = isEffectSku(checkArr)  //检查是否有库存，判定是否有效
       if(isEffect){
         item.status = +item.status === 1 ? 1 : 0
       }else{
         item.status = 2
       }
-      console.log(`${item.com_id}(${item.attribute_value}) => [${checkArr}] => ${isEffect}`)
     })
   })
 
