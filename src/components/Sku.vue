@@ -30,9 +30,9 @@
 
 
 <script setup>
-import { reactive, onMounted } from 'vue'
-import CloneDeep from 'lodash.clonedeep'
-import ResData from '@/mock/mockData.js'
+import ResData from '@/mock/mockData.js';
+import CloneDeep from 'lodash.clonedeep';
+import { onMounted, reactive } from 'vue';
 
 //data
 const state = reactive({
@@ -79,48 +79,14 @@ const getSkuData = () => {
  * @description: 按钮点击
  */
 const btnClick = (params) => {
-  let properties = CloneDeep(state.properties)
-  const {attr_id, attr_idx, attribute_id, attribute_idx, status} = params
-  if(+status === 2){
-    console.log('该规格不可选')
-    return
-  }
-
-  const hasSelectedArr = getSelectedItem(properties)
-  let isSameCol = false
-  for(let i=0; i<hasSelectedArr.length; i++){
-    if(hasSelectedArr[i].includes(attr_id)){
-      isSameCol = true
-      break
-    }
-  }
-
-  //如果重复选择了同一行的item,则进行同一行item重置
-  //status状态说明:  0:默认状态  1:选中激活状态  2:不可选禁用状态
-
-  //点击的是其他行元素，直接点亮
-  if(!isSameCol){ 
-    properties[attr_idx].values[attribute_idx].status = 1
-    state.properties =  properties
-    calc()
-    return
-  }
-
-
-  // 重复点击了同一行
-  const curStatus = properties[attr_idx].values[attribute_idx].status
-  switch(+curStatus){
-    case 0:
-      properties[attr_idx].values.forEach(it => it.status = 0)
-      properties[attr_idx].values[attribute_idx].status = 1
-      break;
-
-    case 1:
-      properties[attr_idx].values[attribute_idx].status = 0
-      break;
-  }
-
-  state.properties =  properties
+  const { status, attr_id, attr_idx, com_id, sku_img, value_id, value_idx } = params;
+  if (+status === 2) return;
+  let properties = CloneDeep(state.properties);
+  properties[attr_idx].values.forEach((it) => {
+    it.status = +it?.status === 2 ? 2 : 0;
+  });
+  properties[+attr_idx].values[+value_idx].status = +status === 0 ? 1 : 0;
+  state.properties = properties;
   calc()
 }
 
