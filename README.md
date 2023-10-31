@@ -2,10 +2,10 @@
 ### 技术栈
 Vue 3 + Vite
 ### 安装
-yarn install
+pnpm install / yarn install / npm install
 
 ### 运行
-yarn dev
+pnpm dev / yarn dev / npm dev
 
 ### 注意
 项目启动后，按F12，以手机模拟查看效果最佳
