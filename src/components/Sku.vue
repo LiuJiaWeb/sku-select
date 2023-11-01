@@ -63,7 +63,7 @@ const getSkuData = () => {
       it.attr_id = +item?.attr_id || 0 //父级的id值
       it.attr_name = item.attr_name //父级的规格类名称
       it.attribute_id = +it?.attribute_id || 0//格式化为Number类型
-      it.com_id = `${it?.attr_id}:${it?.attribute_id}`
+      it.com_id = `${it?.attr_id}:${it?.attribute_id}` //规格id组合值，`父级attr_id 拼接 自身的attribute_id`
     })
   })
 
@@ -104,9 +104,9 @@ const calcSku = () => {
  */    
 const isEffectSku = (key, value) => {
   const skuData = CloneDeep(state.skuData)
-  let selectedSku = CloneDeep(state.selectedSku)
-  selectedSku[key] = value
-  let selectedSkuArr = Object.values(selectedSku).filter(it => it.length > 0)
+  let selectedSku = CloneDeep(state.selectedSku)  //当前已被选择的规格
+  selectedSku[key] = value  //覆盖后，已被选择的规格
+  let selectedSkuArr = Object.values(selectedSku).filter(it => it.length > 0) //将对象处理为数组形式，并过滤其中的空项
 
   //判断数组A是否为数组B的子集
   const _isChildArr = (listA, listB) => {
@@ -114,6 +114,7 @@ const isEffectSku = (key, value) => {
     return listA.every(it => listB.includes(it))
   }
 
+  //是skuData的子集 && 库存>0，就认为是有效规格
   const has_stock = skuData.some(it => _isChildArr(selectedSkuArr, it.properties_arr) && +it?.stock > 0)
   return has_stock
 }
@@ -131,12 +132,15 @@ const skuItemClick = (item) => {
     return
   }
 
-  console.log(`点击项为 ->`, {...item})
+  console.log(`点击项为 ->`, { ...item })
+
+  //如果当前项已被选中，那么置为空取消选中；如果当前项未被选中，那么添加该项的com_id进行选中
   selectedSku[attr_name] = selectedSku[attr_name] === com_id ? '' : com_id
+
   state.selectedSku = selectedSku
   console.log(`新的 selectedSku ->`, selectedSku)
 
-  calcSku()
+  calcSku() //重新执行计算
 }
 
 
